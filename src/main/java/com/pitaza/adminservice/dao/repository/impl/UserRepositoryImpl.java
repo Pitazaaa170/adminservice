@@ -31,6 +31,8 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String UPDATE_USER_BLOCK_STATUS = "UPDATE user_registrations " +
             "SET is_blocked = :is_blocked " +
             "WHERE id = :id";
+    private static final String SELECT_ALL_REGISTERED_USERS = "SELECT * FROM user_registrations " +
+            "WHERE is_registered = true";
 
 
     @Override
@@ -46,7 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<UserEntity> getAllUnregisteredUsers() {
         try {
-            return jdbcTemplate.query(SELECT_ALL_UNAPPROVED_REGISTRATIONS,(rs,rn) ->
+            return jdbcTemplate.query(SELECT_ALL_UNAPPROVED_REGISTRATIONS,(rs, rn) ->
                     new UserEntity(rs.getInt("id"),
                             rs.getString("name"),
                             rs.getString("surname"),
@@ -81,6 +83,23 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public int updateBlockStatusById(long id,boolean isBlocked) {
         return jdbcTemplate.update(UPDATE_USER_BLOCK_STATUS,Map.of("is_blocked",isBlocked,"id",id));
+    }
+
+    @Override
+    public List<UserEntity> getAllRegisteredUsers() {
+        try {
+            return jdbcTemplate.query(SELECT_ALL_REGISTERED_USERS,(rs, rn) ->
+                    new UserEntity(rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("surname"),
+                            rs.getString("role"),
+                            rs.getBoolean("is_registered"),
+                            rs.getBoolean("is_blocked"))
+            );
+        } catch (Exception e) {
+            log.warn("Ошибка во время исполнения sql запроса , {}",e.getMessage());
+            return List.of();
+        }
     }
 
     @Override

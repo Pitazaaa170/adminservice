@@ -18,4 +18,6 @@ public interface UserService {
     void blockUserById(long id);
 
     void unBlockUserById(long id);
+
+    List<UserDto> getRegisteredUsers();
 }

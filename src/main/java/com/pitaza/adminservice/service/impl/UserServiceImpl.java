@@ -72,4 +72,12 @@ public class UserServiceImpl implements UserService {
         userRepository.updateBlockStatusById(id,false);
         accountServiceClient.putUserUnblocked(id);
     }
+
+    @Override
+    public List<UserDto> getRegisteredUsers() {
+        var allUnregisteredUsers = userRepository.getAllRegisteredUsers();
+        return allUnregisteredUsers.stream()
+                .map(userMapper::mapFrom)
+                .collect(Collectors.toList());
+    }
 }
