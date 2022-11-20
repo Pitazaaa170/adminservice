@@ -5,6 +5,7 @@ import com.pitaza.adminservice.dao.repository.UserRepository;
 import com.pitaza.adminservice.dto.ProcessRegistrationDto;
 import com.pitaza.adminservice.dto.UserDto;
 import com.pitaza.adminservice.exception.UserNotFoundException;
+import com.pitaza.adminservice.integration.rest.AccountServiceClient;
 import com.pitaza.adminservice.kafka.message.SuccessfulRegistrationMessage;
 import com.pitaza.adminservice.kafka.producer.SuccessfulRegistrationsTopicSender;
 import com.pitaza.adminservice.mapper.impl.UserMapper;
@@ -14,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final SuccessfulRegistrationsTopicSender successfulRegistrationsTopicSender;
+    private final AccountServiceClient accountServiceClient;
 
 
     @Override
@@ -63,12 +64,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void blockUserById(long id) {
         userRepository.updateBlockStatusById(id,true);
-//        accountServiceClient.postUserBlocked(id);
+        accountServiceClient.putUserBlocked(id);
     }
 
     @Override
     public void unBlockUserById(long id) {
         userRepository.updateBlockStatusById(id,false);
-//        accountServiceClient.postUserUnblocked(id);
+        accountServiceClient.putUserUnblocked(id);
     }
 }
