@@ -16,4 +16,6 @@ public interface UserRepository {
     Optional<UserEntity> getUserById(long id);
 
     int updateBlockStatusById(long id,boolean isBlocked);
+
+    List<UserEntity> getAllRegisteredUsers();
 }

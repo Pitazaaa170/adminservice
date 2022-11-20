@@ -4,6 +4,7 @@ import com.pitaza.adminservice.dto.ProcessRegistrationDto;
 import com.pitaza.adminservice.dto.UserDto;
 import com.pitaza.adminservice.service.UserService;
 import com.pitaza.adminservice.web.api.ProcessRegistrationRequest;
+import com.pitaza.adminservice.web.api.RegisteredUsersResponse;
 import com.pitaza.adminservice.web.api.UnregisteredUsersResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,10 @@ public class UserRegistrationsController {
         return ResponseEntity.ok(new UnregisteredUsersResponse(userService.getUnregisteredUsers()));
     }
 
+    @GetMapping("user/registered")
+    public ResponseEntity<RegisteredUsersResponse> getAllRegisteredUsers() {
+        return ResponseEntity.ok(new RegisteredUsersResponse(userService.getRegisteredUsers()));
+    }
     @PutMapping("/registration")
     public ResponseEntity<?> processRegistration(
             @RequestBody ProcessRegistrationRequest processRegistrationRequest
